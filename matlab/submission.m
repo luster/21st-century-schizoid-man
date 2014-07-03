@@ -6,21 +6,15 @@
 
 %% load trained alg/classifier and feature selection object (optional)
 
-load featsel_best5
-load alg_svm_linearkernel_featsel5features
+load Llnn_rvm_default % alg
 
 %% load test data
 
-load testing
-features = [testSBM,testFNC];
-Id = Id(2:end);
+load testDs
 
 %% run this shit
 
-ds = prtDataSetClass(features);
-ds = featSel.run(ds);
-
-result = alg.run(ds);
+result = alg.run(testDs);
 
 %% output this shit
 
@@ -30,5 +24,5 @@ fid = fopen(filename,'w');
 
 fprintf(fid,'Id,Probability\n');
 for i = 1:length(Id)
-    fprintf(fid,'%i,%i\n',Id(i),result.data(i));
+    fprintf(fid,'%i,%f\n',Id(i),result.data(i));
 end

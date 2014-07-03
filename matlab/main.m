@@ -25,36 +25,38 @@ ds = prtDataSetClass(train_features, train_labels);
 % zmuv = zmuv.train(ds);
 % ds = zmuv.run(ds);
 
+classifier = prtClassLibSvm;
+classifier.kernelType = 0;
+% classifier = prtClassRvm;
 
 % feature selection
-% featSel = prtFeatSelSfs;
-% featSel.evaluationMetric = @(DS)prtEvalAuc(classifier,DS);
-% featSel.nFeatures = 3;
+featSel = prtFeatSelSfs;
+featSel.evaluationMetric = @(DS)prtEvalAuc(classifier,DS);
+featSel.nFeatures = 5;
 % featSel = prtFeatSelStatic;
 % featSel.selectedFeatures = bigmlfeatures;
 
-% featSel = featSel.train(ds);
-% dsFeatSel = featSel.run(ds);
-dsFeatSel = ds;
+featSel = featSel.train(ds);
+dsFeatSel = featSel.run(ds);
+% dsFeatSel = ds;
 
 %% train classifier
 
 % preprocessing
-zmuv = prtPreProcZmuv;
+
 
 %classifier = prtClassLibSvm;
-classifier = prtClassRvm;
-classifier.kernels.kernelCell{2}.sigma = .75; % .75 give 88%
+% classifier.kernels.kernelCell{2}.sigma = .35; % .75 give 88%
 clf = classifier;
-clf.internalDecider = prtDecisionBinaryMinPe;
-%alg = zmuv + clf;
+clf.kernelType = 0;
 alg = clf;
+% alg = clf;
 
-alg = alg.train(dsFeatSel);
+alg = alg.train(ds);
 
 %% cross-validate using leave-one-out
 
-result = alg.kfolds(dsFeatSel);
+result = alg.kfolds(ds);
 
 %% results
 
