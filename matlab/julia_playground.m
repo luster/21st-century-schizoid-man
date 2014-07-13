@@ -3,7 +3,14 @@ prtPath('alpha','beta')
 
 %% load training and test data
 load training.mat
-[features, lensbm, lenfnc] = julia_get_features(train_sbm, train_fnc, train_labels);
+% select feature indexes
+[sbm_inds, fnc_inds] = julia_select_features(...
+    train_sbm,train_fnc,train_labels);
+
+% generate feature vectors
+[features, lensbm, lenfnc] = julia_get_features(train_sbm, train_fnc, ...
+    sbm_inds, fnc_inds);
+
 ds = prtDataSetClass(features, train_labels);
 
 %% CLASSIFY
@@ -26,8 +33,8 @@ svm.kernelType = 0;
 % FRANKENCLASSIFIER
 feat1 = prtFeatSelStatic;
 feat2 = prtFeatSelStatic;
-feat1.selectedFeatures = [1:lensbm];
-feat2.selectedFeatures = [lensbm+1:size(ds.X,2)];
+feat1.selectedFeatures = 1:lensbm;
+feat2.selectedFeatures = lensbm+1:size(ds.X,2);
 % alg1 = feat1 + prtPreProcZmuv + nn;
 % alg2 = feat2 + rvm;
 alg1 = nn;
