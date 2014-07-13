@@ -55,8 +55,8 @@ alg2 = svm;
 %alg = alg2; % just the sbm features in a nn
 alg =  alg1/alg2 + svm;
 
-alg = alg.train(ds); % save for later
 out = alg.kfolds(ds,5);
+alg = alg.train(ds); % save for later
 save('alg', 'alg')
 
 figure;
