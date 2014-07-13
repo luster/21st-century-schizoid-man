@@ -3,6 +3,18 @@ prtPath('alpha','beta')
 
 %% load training and test data
 load training.mat
+% chop off some data to use as a validation set, then never touch
+% SET HOLDOUT TO 0 TO TRAIN MODEL FOR SUBMISSION!
+holdout = 20;
+rows = size(train_sbm,1);
+SBM_validation = train_sbm(1:holdout, :);
+FNC_validation = train_fnc(1:holdout, :);
+lab_validation = train_labels(1:holdout);
+
+train_sbm = train_sbm(holdout+1:rows, :);
+train_fnc = train_fnc(holdout+1:rows, :);
+train_labels = train_labels(holdout+1:rows);
+
 % select feature indexes
 [sbm_inds, fnc_inds] = julia_select_features(...
     train_sbm,train_fnc,train_labels);
@@ -54,6 +66,10 @@ prtScoreRoc(out)
 % figure
 % plot(out.actionCell{3})
 
-
+if holdout ~= 0
+    save('validating.mat','lab_validation', ...
+        'SBM_validation', 'FNC_validation', ...
+        'sbm_inds', 'fnc_inds');
+end
 
 

@@ -5,7 +5,6 @@
 % submission
 
 %% load trained alg/classifier and feature selection object (optional)
-
 load alg % alg
 
 %% load test data
