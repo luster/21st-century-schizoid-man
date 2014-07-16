@@ -18,7 +18,7 @@ train_data = double(train_fnc);
 schizos = train_data(train_labels==1,:);
 control = train_data(train_labels==0,:);
 [h,p] = ttest2(schizos, control);
-fnc_inds = find(p<.01);
+fnc_inds = find(p<.005)
 
 end
 
